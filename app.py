@@ -1,8 +1,8 @@
 import time
 import requests
 
-TOKEN = "VALE_TO_TOKEN_SOU"
-CHAT_ID = "VALE_TO_CHAT_ID_SOU"
+TOKEN = "8669405381:AAEsB6LU119YnVq1Cc9_VwL2QcYjSQfUNXQ"
+CHAT_ID = "8602975728""
 
 last_draw_id = None
 
