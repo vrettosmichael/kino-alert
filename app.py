@@ -2,7 +2,7 @@ import time
 import requests
 
 TOKEN = "8669405381:AAEsB6LU119YnVq1Cc9_VwL2QcYjSQfUNXQ"
-CHAT_ID = "8602975728""
+CHAT_ID = "8602975728"
 
 last_draw_id = None
 
