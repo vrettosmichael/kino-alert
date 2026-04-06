@@ -11,8 +11,8 @@ def send_message(text):
         "text": text
     }
     response = requests.post(url, data=data)
-print(response.status_code)
-print(response.text)
+    print(response.status_code)
+    print(response.text)
 
 try:
     res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result")
