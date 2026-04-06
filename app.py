@@ -14,18 +14,18 @@ def send_message(text):
     print(response.status_code)
     print(response.text)
 
-send_message("✅ TEST Telegram δουλεύει")
-
 try:
     res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result")
     data = res.json()
+    print(data)
 
     draw_id = data["drawId"]
     draw_time = data["drawTime"]
 
     last_digit = draw_id % 10
 
-    send_message(f"✅ TEST ΚΙΝΟ\nΣειρά: {last_digit}\nΏρα: {draw_time}")
+    if last_digit == 3 or last_digit == 4:
+        send_message(f"🚨 ΚΙΝΟ ALERT\nΣειρά: {last_digit}\nΏρα: {draw_time}")
 
 except Exception as e:
     print("Error:", e)
