@@ -15,8 +15,7 @@ try:
 
     last_digit = draw_id % 10
 
-    if last_digit == 3 or last_digit == 4:
-        send_message(f"🚨 ΚΙΝΟ ALERT\nΣειρά: {last_digit}\nΏρα: {draw_time}")
+    send_message(f"✅ TEST ΚΙΝΟ\nΣειρά: {last_digit}\nΏρα: {draw_time}")
 
 except Exception as e:
     print("Error:", e)
