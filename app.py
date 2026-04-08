@@ -1,5 +1,6 @@
 import os
 import requests
+from datetime import datetime
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
@@ -15,17 +16,13 @@ def send_message(text):
     print(response.text)
 
 try:
-    # ΝΕΟ endpoint
     res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result-and-active")
     data = res.json()
-    print(data)
 
-    # Προσπαθούμε να πιάσουμε το τελευταίο result με ασφαλή τρόπο
-    last_result = data.get("last") or data.get("lastResult") or data
+    draw_id = data["drawId"]
+    draw_time_raw = data["drawTime"]
 
-    draw_id = last_result["drawId"]
-    draw_time = last_result["drawTime"]
-
+    draw_time = datetime.fromtimestamp(draw_time_raw / 1000).strftime("%H:%M")
     last_digit = draw_id % 10
 
     if last_digit == 3 or last_digit == 4:
