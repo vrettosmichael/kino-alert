@@ -15,12 +15,16 @@ def send_message(text):
     print(response.text)
 
 try:
-    res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result")
+    # ΝΕΟ endpoint
+    res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result-and-active")
     data = res.json()
     print(data)
 
-    draw_id = data["drawId"]
-    draw_time = data["drawTime"]
+    # Προσπαθούμε να πιάσουμε το τελευταίο result με ασφαλή τρόπο
+    last_result = data.get("last") or data.get("lastResult") or data
+
+    draw_id = last_result["drawId"]
+    draw_time = last_result["drawTime"]
 
     last_digit = draw_id % 10
 
