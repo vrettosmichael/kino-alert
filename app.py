@@ -16,7 +16,7 @@ def send_message(text):
     print(response.text)
 
 try:
-   res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result-and-active")
+      res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result-and-active")
 data = res.json()
 
 last = data["last"]
