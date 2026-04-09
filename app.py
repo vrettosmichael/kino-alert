@@ -26,7 +26,7 @@ try:
     draw_time = datetime.fromtimestamp(draw_time_raw / 1000).strftime("%H:%M")
     last_digit = draw_id % 10
 
-    if True:
+   if last_digit == 3 or last_digit == 4:
         send_message(f"🚨 ΚΙΝΟ ALERT\nΣειρά: {last_digit}\nΏρα: {draw_time}")
 
 except Exception as e:
