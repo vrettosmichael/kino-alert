@@ -16,13 +16,15 @@ def send_message(text):
     print(response.text)
 
 try:
-      res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result-and-active")
-data = res.json()
+    res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result-and-active")
+    data = res.json()
 
-last = data["last"]
+    last = data["last"]
+    draw_id = last["drawId"]
+    draw_time_raw = last["drawTime"]
 
-draw_id = last["drawId"]
-draw_time_raw = last["drawTime"]
+    draw_time = datetime.fromtimestamp(draw_time_raw / 1000).strftime("%H:%M")
+    last_digit = draw_id % 10
 
     if last_digit == 3 or last_digit == 4:
         send_message(f"🚨 ΚΙΝΟ ALERT\nΣειρά: {last_digit}\nΏρα: {draw_time}")
