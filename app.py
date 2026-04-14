@@ -1,9 +1,14 @@
 import os
 import requests
-from datetime import datetime
+import json
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
+
+res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result-and-active")
+data = res.json()
+
+print(json.dumps(data, indent=2, ensure_ascii=False))
 
 def send_message(text):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
