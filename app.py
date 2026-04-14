@@ -1,14 +1,9 @@
 import os
 import requests
-import json
+from datetime import datetime
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
-
-res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result-and-active")
-data = res.json()
-
-print(json.dumps(data, indent=2, ensure_ascii=False))
 
 def send_message(text):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
@@ -27,16 +22,13 @@ try:
     numbers = data["last"]["winningNumbers"]["list"]
     last_digit = numbers[-1]
 
-    last = data["last"]
-    draw_id = last["drawId"]
-    draw_time_raw = last["drawTime"]
-
+    draw_time_raw = data["last"]["drawTime"]
     draw_time = datetime.fromtimestamp(draw_time_raw / 1000).strftime("%H:%M")
 
     print("Last number:", last_digit)
 
     if last_digit == 3 or last_digit == 4:
-        send_message(f"🎯 KINO ALERT\nΣειρά: {last_digit}")
+        send_message(f"🎯 KINO ALERT\nΣειρά: {last_digit}\nΏρα: {draw_time}")
 
 except Exception as e:
     print("Error:", e)
