@@ -1,6 +1,6 @@
 import os
 import requests
-from bs4 import BeautifulSoup
+from datetime import datetime
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
@@ -11,25 +11,33 @@ def send_message(text):
         "chat_id": CHAT_ID,
         "text": text
     }
-    requests.post(url, data=data)
+    response = requests.post(url, data=data)
+    print(response.status_code)
+    print(response.text)
 
 try:
-    url = "https://www.kinox.gr/kliroseis-kino"
-    res = requests.get(url)
-    soup = BeautifulSoup(res.text, "html.parser")
+    res = requests.get("https://api.opap.gr/draws/v3.0/1100/last-result-and-active")
+    data = res.json()
 
-    # βρίσκουμε το πρώτο αποτέλεσμα (τελευταία κλήρωση)
-    result = soup.find("div", class_="kino-result")
+    numbers = data["last"]["winningNumbers"]["list"]
 
-    # βρίσκουμε το Σ (συνήθως είναι μέσα σε span)
-    s_value = result.find("span", class_="sum").text.strip()
+    # Υπολογισμός "Σ" (σε πόσες δεκάδες έπεσαν οι αριθμοί)
+    decades = set()
+
+    for num in numbers:
+        decade = (num - 1) // 10 + 1
+        decades.add(decade)
+
+    s_value = len(decades)
+
+    draw_time_raw = data["last"]["drawTime"]
+    draw_time = datetime.fromtimestamp(draw_time_raw / 1000).strftime("%H:%M")
 
     print("S value:", s_value)
 
-    s_value = int(s_value)
-
+    # ALERT
     if s_value == 3 or s_value == 4:
-        send_message(f"🎯 KINO ALERT\nΣειρά: {s_value}")
+        send_message(f"🎯 KINO ALERT\nΣειρά: {s_value}\nΏρα: {draw_time}")
 
 except Exception as e:
     print("Error:", e)
