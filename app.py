@@ -62,16 +62,16 @@ try:
     for r in results[-8:]:
         print(r)
 
-    if len(results) >= 7:
-        before_pattern = results[-7]
-        last_5 = results[-6:-1]
+    if len(results) >= 6:
+        previous = results[-6]
+        last_5 = results[-5:]
+
         groups = [r["group"] for r in last_5]
 
         if all(g == "LOW" for g in groups) or all(g == "HIGH" for g in groups):
             pattern_group = groups[0]
 
-            # Στέλνει μόνο όταν μόλις δημιουργήθηκε νέο σερί 5 LOW/HIGH
-            if before_pattern["group"] != pattern_group:
+            if previous["group"] != pattern_group:
                 message = f"Teleperformance {pattern_group}"
                 send_message(message)
             else:
