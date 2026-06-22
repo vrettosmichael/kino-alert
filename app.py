@@ -65,28 +65,14 @@ try:
     if len(results) >= 7:
         before_pattern = results[-7]
         last_5 = results[-6:-1]
-        sixth = results[-1]
-
         groups = [r["group"] for r in last_5]
 
         if all(g == "LOW" for g in groups) or all(g == "HIGH" for g in groups):
             pattern_group = groups[0]
 
-            # Αυτό κόβει τα επαναλαμβανόμενα alerts.
-            # Στέλνει μόνο όταν το σερί των 5 μόλις δημιουργήθηκε.
+            # Στέλνει μόνο όταν μόλις δημιουργήθηκε νέο σερί 5 LOW/HIGH
             if before_pattern["group"] != pattern_group:
-                message = (
-                    "🚨 KINO ALERT\n\n"
-                    f"5 συνεχόμενα {pattern_group}\n\n"
-                    f"1) {last_5[0]['time']} → Σ {last_5[0]['s']}\n"
-                    f"2) {last_5[1]['time']} → Σ {last_5[1]['s']}\n"
-                    f"3) {last_5[2]['time']} → Σ {last_5[2]['s']}\n"
-                    f"4) {last_5[3]['time']} → Σ {last_5[3]['s']}\n"
-                    f"5) {last_5[4]['time']} → Σ {last_5[4]['s']}\n\n"
-                    f"6ο:\n"
-                    f"{sixth['time']} → Σ {sixth['s']} ({sixth['group']})"
-                )
-
+                message = f"Teleperformance {pattern_group}"
                 send_message(message)
             else:
                 print("Pattern continues. Alert already sent before.")
