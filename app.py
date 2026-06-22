@@ -11,10 +11,7 @@ API_URL = f"https://api.opap.gr/draws/v3.0/{GAME_ID}/last/20"
 
 def send_message(text):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    data = {
-        "chat_id": CHAT_ID,
-        "text": text
-    }
+    data = {"chat_id": CHAT_ID, "text": text}
     response = requests.post(url, data=data)
     print(response.status_code)
     print(response.text)
@@ -22,25 +19,29 @@ def send_message(text):
 
 def calculate_s_value(numbers):
     decades = set()
-
     for num in numbers:
         decade = (num - 1) // 10 + 1
         decades.add(decade)
-
     return len(decades)
 
 
 def group_s(s_value):
-    if 1 <= s_value <= 5:
-        return "LOW"
-    return "HIGH"
+    return "LOW" if 1 <= s_value <= 5 else "HIGH"
 
 
 try:
     res = requests.get(API_URL, timeout=20)
     data = res.json()
 
-    draws = data["content"]
+    # Το API συνήθως επιστρέφει λίστα απευθείας, όχι {"content": ...}
+    if isinstance(data, list):
+        draws = data
+    elif isinstance(data, dict) and "content" in data:
+        draws = data["content"]
+    else:
+        print("Unexpected API format:")
+        print(data)
+        raise Exception("Unknown API response format")
 
     results = []
 
