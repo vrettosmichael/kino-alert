@@ -17,10 +17,32 @@ def send_message(text):
 
 
 def calculate_s_value(numbers):
-    decades = set()
-    for num in numbers:
-        decades.add((num - 1) // 10 + 1)
-    return len(decades)
+    counts = {}
+    first_seen = {}
+
+    for index, num in enumerate(numbers):
+        decade = (num - 1) // 10 + 1
+
+        counts[decade] = counts.get(decade, 0) + 1
+
+        if decade not in first_seen:
+            first_seen[decade] = index
+
+    best_decade = None
+    best_count = -1
+    best_first_seen = 999
+
+    for decade, count in counts.items():
+        if count > best_count:
+            best_decade = decade
+            best_count = count
+            best_first_seen = first_seen[decade]
+        elif count == best_count:
+            if first_seen[decade] < best_first_seen:
+                best_decade = decade
+                best_first_seen = first_seen[decade]
+
+    return best_decade
 
 
 def group_s(s):
