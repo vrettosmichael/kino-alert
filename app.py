@@ -22,7 +22,6 @@ def calculate_s_value(numbers):
 
     for index, num in enumerate(numbers):
         decade = (num - 1) // 10 + 1
-
         counts[decade] = counts.get(decade, 0) + 1
 
         if decade not in first_seen:
@@ -33,14 +32,10 @@ def calculate_s_value(numbers):
     best_first_seen = 999
 
     for decade, count in counts.items():
-        if count > best_count:
+        if count > best_count or (count == best_count and first_seen[decade] < best_first_seen):
             best_decade = decade
             best_count = count
             best_first_seen = first_seen[decade]
-        elif count == best_count:
-            if first_seen[decade] < best_first_seen:
-                best_decade = decade
-                best_first_seen = first_seen[decade]
 
     return best_decade
 
@@ -58,7 +53,6 @@ try:
     for draw in data:
         if "winningNumbers" not in draw:
             continue
-
         if "list" not in draw["winningNumbers"]:
             continue
 
@@ -81,23 +75,17 @@ try:
     results = sorted(results, key=lambda x: x["draw_id"])
 
     print("Last S values:")
-    for r in results[-8:]:
+    for r in results[-5:]:
         print(r)
 
-    if len(results) >= 6:
-        previous = results[-6]
+    if len(results) >= 5:
         last_5 = results[-5:]
-
         groups = [r["group"] for r in last_5]
 
-        if all(g == "LOW" for g in groups) or all(g == "HIGH" for g in groups):
-            pattern_group = groups[0]
-
-            if previous["group"] != pattern_group:
-                message = f"Teleperformance {pattern_group}"
-                send_message(message)
-            else:
-                print("Pattern continues. Alert already sent before.")
+        if all(g == "LOW" for g in groups):
+            send_message("Teleperformance LOW")
+        elif all(g == "HIGH" for g in groups):
+            send_message("Teleperformance HIGH")
         else:
             print("No 5 LOW/HIGH pattern found.")
     else:
