@@ -21,30 +21,24 @@ def send_message(text):
 
 
 def calculate_s(numbers):
-    counts = {}
-    first_seen = {}
+	final_counts = {}
 
-    for index, num in enumerate(numbers):
-        decade = (num - 1) // 10 + 1
-        counts[decade] = counts.get(decade, 0) + 1
+	for num in numbers:
+		s = ((num - 1) % 10) + 1
+		final_counts[s] = final_counts.get(s, 0) + 1
 
-        if decade not in first_seen:
-            first_seen[decade] = index
+	max_count = max(final_counts.values())
 
-    best_decade = None
-    best_count = -1
-    best_first_seen = 999
+	running_counts = {}
 
-    for decade, count in counts.items():
-        if count > best_count:
-            best_decade = decade
-            best_count = count
-            best_first_seen = first_seen[decade]
-        elif count == best_count and first_seen[decade] < best_first_seen:
-            best_decade = decade
-            best_first_seen = first_seen[decade]
+	for num in numbers:
+		s = ((num - 1) % 10) + 1
+		running_counts[s] = running_counts.get(s, 0) + 1
 
-    return best_decade
+		if final_counts[s] == max_count and running_counts[s] == max_count:
+			return s
+
+	return None
 
 
 def group_s(s):
